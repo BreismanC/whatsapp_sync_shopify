@@ -8,9 +8,11 @@ import makeWASocket, {
 } from "@whiskeysockets/baileys";
 import { Boom } from "@hapi/boom";
 
+import QRCode from "qrcode";
+
 import { ShopifyService } from "./shopify.service";
 import { config } from "../config";
-import { ProductImage, ProductToShopify, Record } from "../interfaces";
+
 import {
   bufferToBase64,
   extractProductInfo,
@@ -18,13 +20,22 @@ import {
   isProductMessage,
 } from "../utils";
 
+import { ProductImage, ProductToShopify, Record } from "../interfaces";
+import { Server } from "socket.io";
+
 export class WhatsappService {
+  private io: Server;
   private sock: any;
   private productComposition: Array<{ info: any; media: Buffer }> = [];
   private shopifyService: ShopifyService;
 
-  constructor() {
+  constructor(io: Server) {
+    this.io = io;
     this.shopifyService = new ShopifyService();
+  }
+
+  async isConnected () {
+    
   }
 
   async connect() {
@@ -42,8 +53,16 @@ export class WhatsappService {
     this.sock.ev.on("messages.upsert", this.handleMessages.bind(this));
   }
 
-  private handleConnectionUpdate(update: ConnectionState) {
-    const { connection, lastDisconnect } = update;
+  private async handleConnectionUpdate(update: ConnectionState) {
+    const { connection, lastDisconnect, qr } = update;
+
+    if (qr) {
+      //Generate the QR as Data URL and send it to the frontend
+      const qrCodeDataURL = await QRCode.toDataURL(qr);
+      this.io.emit("qr", qrCodeDataURL);
+      this.io.emit("message", "Escanea el código QR con tu teléfono");
+    }
+
     if (connection === "close") {
       const shouldReconnect =
         (lastDisconnect?.error as Boom)?.output?.statusCode !==
@@ -54,12 +73,19 @@ export class WhatsappService {
         ", reconnecting ",
         shouldReconnect
       );
+
+      this.io.emit("disconnected", "Desconectado de whatsapp");
+
       // reconnect if not logged out
       if (shouldReconnect) {
         this.connect();
       }
     } else if (connection === "open") {
+      this.io.emit("authenticated", "Autenticado en Whatsapp");
       console.log("opened connection");
+    } else if (connection === "connecting") {
+      this.io.emit("connecting", "Realizando conexión");
+      console.log("Connecting");
     }
   }
 

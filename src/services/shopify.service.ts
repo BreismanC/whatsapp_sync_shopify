@@ -15,6 +15,7 @@ export class ShopifyService {
       description,
       options,
       variants,
+      tags,
       sku,
       price,
       images,
@@ -38,6 +39,7 @@ export class ShopifyService {
         sku,
         options,
         variants,
+        tags,
         images,
       };
       const productCreated = await this.shopify.product.create(productData);

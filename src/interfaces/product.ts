@@ -4,6 +4,7 @@ export interface ProductInfo {
   sku: string;
   options: ProductOption[];
   variants: ProductVariant[];
+  tags: string;
   description: string;
   additionalPrices: ProductAdditionalPrice[];
   groupInfo: ProductGroupInfo | null;

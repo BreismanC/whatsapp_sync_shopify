@@ -2,7 +2,7 @@ import { ProductInfo } from "../interfaces";
 
 export function isProductMessage(msg: string) {
   const productPattern =
-    /^NOMBRE:.*\n\nPRECIO:.*\n\nSKU:.*\n\nTALLAS:.*\n\nDESCRIPCIÓN:.*$/gm;
+    /^NOMBRE:.*\n\nPRECIO:.*\n\nSKU:.*\n\nCATEGORÍAS:.*\n\nTALLAS:.*\n\nDESCRIPCIÓN:.*$/gm;
   return productPattern.test(msg);
 }
 
@@ -14,6 +14,7 @@ export async function extractProductInfo(
     const priceMatch = msg.match(/PRECIO:\s*(.*)/i);
     const skuMatch = msg.match(/SKU:\s*(.*)/i);
     const sizesMatch = msg.match(/TALLAS:\s*(.*)/i);
+    const tagsMatch = msg.match(/CATEGORÍAS:\s*(.*)/i);
     const descriptionMatch = msg.match(/DESCRIPCIÓN:\s*(.*)/i);
     const additionalPricesMatch = [
       ...msg.matchAll(/\* Precio \d+:\s*\$([\d,.]+) USD \(([^)]+)\)/g),
@@ -25,6 +26,7 @@ export async function extractProductInfo(
       !priceMatch ||
       !skuMatch ||
       !sizesMatch ||
+      !tagsMatch ||
       !descriptionMatch ||
       additionalPricesMatch.length === 0 ||
       !groupMatch
@@ -66,6 +68,11 @@ export async function extractProductInfo(
           option1: value,
           price: parseFloat(priceAndCurrency[1].replace(",", ".")),
         })),
+
+      tags: tagsMatch[1]
+        .split("-")
+        .map((tag) => tag.trim())
+        .join(", "),
 
       description: descriptionMatch[1].trim(),
 

@@ -86,3 +86,6 @@ auth/
 dist/
 
 log/
+
+.github/
+.vscode/
