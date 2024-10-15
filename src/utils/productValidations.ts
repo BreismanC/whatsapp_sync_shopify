@@ -67,6 +67,7 @@ export async function extractProductInfo(
         .map((value) => ({
           option1: value,
           price: parseFloat(priceAndCurrency[1].replace(",", ".")),
+          sku: skuMatch[1].trim(),
         })),
 
       tags: tagsMatch[1]
