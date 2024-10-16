@@ -11,8 +11,24 @@ async function main() {
   });
 
   const whatsappService = new WhatsappService(server.io);
+
   await whatsappService.connect().catch((error) => {
     console.log("Error en la conexión con whatsapp", error);
+  });
+
+  // Manejar conexiones de Socket.IO
+  server.io.on("connection", (socket) => {
+    console.log(`Cliente conectado: ${socket.id}`);
+
+    // Emitir el estado actual al cliente que se conecta
+    if (whatsappService.getConnectionStatus()) {
+      socket.emit("authenticated", "Autenticado en WhatsApp");
+    } else {
+      socket.emit("qr", {
+        qr: whatsappService.qrCodeDataURL,
+        message: "Escanea el código QR con tu teléfono",
+      });
+    }
   });
 }
 

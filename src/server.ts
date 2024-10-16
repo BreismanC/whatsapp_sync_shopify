@@ -15,7 +15,12 @@ export class Server {
     this.port = port;
     this.router = router;
     this.httpServer = new HTTPServer(this.app);
-    this.io = new IOServer(this.httpServer);
+    this.io = new IOServer(this.httpServer, {
+      cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"],
+      },
+    });
   }
 
   async start() {

@@ -7,7 +7,6 @@ import makeWASocket, {
   WAMessage,
 } from "@whiskeysockets/baileys";
 import { Boom } from "@hapi/boom";
-
 import QRCode from "qrcode";
 
 import { ShopifyService } from "./shopify.service";
@@ -28,21 +27,19 @@ export class WhatsappService {
   private sock: any;
   private productComposition: Array<{ info: any; media: Buffer }> = [];
   private shopifyService: ShopifyService;
+  private isAuthenticated: boolean = false;
+  public qrCodeDataURL: string | undefined;
 
   constructor(io: Server) {
     this.io = io;
     this.shopifyService = new ShopifyService();
   }
 
-  async isConnected () {
-    
-  }
-
   async connect() {
     const { state, saveCreds } = await useMultiFileAuthState("./auth");
     this.sock = makeWASocket({
       auth: state,
-      printQRInTerminal: true,
+      printQRInTerminal: false,
     });
 
     this.sock.ev.on("creds.update", saveCreds);
@@ -57,10 +54,17 @@ export class WhatsappService {
     const { connection, lastDisconnect, qr } = update;
 
     if (qr) {
-      //Generate the QR as Data URL and send it to the frontend
-      const qrCodeDataURL = await QRCode.toDataURL(qr);
-      this.io.emit("qr", qrCodeDataURL);
-      this.io.emit("message", "Escanea el código QR con tu teléfono");
+      try {
+        //Generate the QR as Data URL and send it to the frontend
+        this.qrCodeDataURL = await QRCode.toDataURL(qr);
+        this.io.emit("qr", {
+          qr: this.qrCodeDataURL,
+          message: "Escanea el código QR con tu teléfono",
+        });
+        console.log("QR emitido al frontend");
+      } catch (error) {
+        throw new Error("Error al enviar el código QR al front");
+      }
     }
 
     if (connection === "close") {
@@ -73,6 +77,7 @@ export class WhatsappService {
         ", reconnecting ",
         shouldReconnect
       );
+      this.isAuthenticated = false;
 
       this.io.emit("disconnected", "Desconectado de whatsapp");
 
@@ -81,11 +86,12 @@ export class WhatsappService {
         this.connect();
       }
     } else if (connection === "open") {
+      this.isAuthenticated = true;
       this.io.emit("authenticated", "Autenticado en Whatsapp");
-      console.log("opened connection");
+      console.log("Conexión a WhatsApp abierta");
     } else if (connection === "connecting") {
       this.io.emit("connecting", "Realizando conexión");
-      console.log("Connecting");
+      console.log("Conectando con whatsapp");
     }
   }
 
@@ -172,5 +178,13 @@ export class WhatsappService {
 
     generateRecord(record);
     this.productComposition = [];
+  }
+
+  public isConnected() {
+    return this.sock.user ? true : false;
+  }
+
+  public getConnectionStatus(): boolean {
+    return this.isAuthenticated;
   }
 }
