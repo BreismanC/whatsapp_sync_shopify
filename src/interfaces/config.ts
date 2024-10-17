@@ -1,4 +1,6 @@
 export interface Config {
+  NODE_ENV: string;
+  HOST: string;
   PORT: number;
   SHOPIFY_SHOP_NAME: string;
   SHOPIFY_PASSWROD: string;

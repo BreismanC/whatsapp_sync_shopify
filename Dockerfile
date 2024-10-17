@@ -35,5 +35,14 @@ COPY --from=build /app/dist ./dist
 # Copiamos el archivo .env desde el build anterior
 COPY --from=build /app/.env ./
 
+# Copiamos los archivos estáticos desde el build anterior
+COPY --from=build /app/public ./public
+
+# Montamos un volumen para la persistencia de la carpeta auth
+VOLUME /app/auth
+
+#Exponemos el puerto 3000
+EXPOSE 3000
+
 # Define el comando que se ejecutará al iniciar el contenedor
 CMD ["node", "dist/index.js"]

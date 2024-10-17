@@ -1,4 +1,8 @@
-const socket = io.connect("http://localhost:3000", { forceNew: true });
+const HOST = "http://localhost:3000"; //^Cambiar el host cuando se despliegue
+
+const socket = io.connect(HOST, {
+  forceNew: true,
+});
 
 const qrcode = document.getElementById("qrcode");
 const cardText = document.getElementById("card__text");

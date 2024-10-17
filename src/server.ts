@@ -2,6 +2,7 @@ import express, { Router, urlencoded } from "express";
 import { Server as HTTPServer } from "node:http";
 import { Server as IOServer } from "socket.io";
 import { Options } from "./interfaces";
+import { config } from "./config";
 
 export class Server {
   public readonly app = express();
@@ -17,7 +18,7 @@ export class Server {
     this.httpServer = new HTTPServer(this.app);
     this.io = new IOServer(this.httpServer, {
       cors: {
-        origin: "http://localhost:3000",
+        origin: config.HOST,
         methods: ["GET", "POST"],
       },
     });
@@ -34,7 +35,7 @@ export class Server {
     // Serve static files
     this.app.use(express.static("public"));
 
-    this.httpServer.listen(this.port, () => {
+    this.httpServer.listen(this.port, "0.0.0.0", () => {
       console.log(`Server running on port ${this.port}`);
     });
   }
