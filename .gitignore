@@ -88,3 +88,6 @@ log/
 
 .github/
 .vscode/
+
+*.sqlite
+*.db

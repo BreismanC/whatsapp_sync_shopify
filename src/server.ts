@@ -30,7 +30,7 @@ export class Server {
     this.app.use(urlencoded({ extended: true }));
 
     //Routes
-    this.app.use("api/v1", this.router);
+    this.app.use("/api/v1", this.router);
 
     // Serve static files
     this.app.use(express.static("public"));

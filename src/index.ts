@@ -2,6 +2,7 @@ import { config } from "./config";
 import { Server } from "./server";
 import { WhatsappService } from "./services/whatsapp.service";
 import { AppRoutes } from "./routes/server.routes";
+import { CronjobService } from "./services/cronjob.service";
 
 async function main() {
   const server = new Server({ port: config.PORT, router: AppRoutes.routes });
@@ -30,6 +31,10 @@ async function main() {
       });
     }
   });
+
+  // Tarea programada con CronJob
+  const cronjob = new CronjobService();
+  cronjob.run();
 }
 
 main();

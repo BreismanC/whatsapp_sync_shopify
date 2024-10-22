@@ -53,6 +53,16 @@ export class ShopifyService {
     }
   }
 
+  async updateProduct(shopifyId: number, status: String) {
+    try {
+      return await this.shopify.product.update(shopifyId, { status });
+    } catch (error) {
+      throw new Error(
+        `Erro al intentar actualizar el producto en Shopify con Id: ${shopifyId}`
+      );
+    }
+  }
+
   private generateBody(body: BodyToHtmlShopify) {
     const { description, currency, additionalPrices, groupInfo } = body;
 

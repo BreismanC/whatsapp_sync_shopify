@@ -1,0 +1,14 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+      - "5555:5555"
+    env_file:
+      - .env
+    volumes:
+      - ./database:/app/database       # Volumen para la base de datos SQLite
+      - ./logs:/app/logs               # Volumen para los logs
+      - ./auth:/app/auth               # Volumen para las sesiones de WhatsApp

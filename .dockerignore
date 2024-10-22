@@ -4,3 +4,5 @@ auth
 logs
 .github
 .vscode
+*.sqlite
+*.db

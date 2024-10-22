@@ -26,6 +26,9 @@ FROM node:22.9.0-alpine3.19 AS production
 # Establece el directorio de trabajo en el contenedor
 WORKDIR /app
 
+#Copia el package.json y package.lock.json
+COPY package*.json ./
+
 # Copiamos las dependencias desde el build anterior
 COPY --from=build /app/node_modules ./node_modules
 
@@ -38,11 +41,17 @@ COPY --from=build /app/.env ./
 # Copiamos los archivos estáticos desde el build anterior
 COPY --from=build /app/public ./public
 
-# Montamos un volumen para la persistencia de la carpeta auth
-VOLUME /app/auth
+# Copiamos la carpeta prisma con el esquema de definición
+COPY --from=build /app/prisma ./prisma
+
+# Montamos volúmenes para la persistencia de la base de datos, logs y auth
+VOLUME /app/database       # Persistencia de la base de datos SQLite
+VOLUME /app/logs           # Persistencia de los logs
+VOLUME /app/auth           # Persistencia de la carpeta de sesión de WhatsApp
 
 #Exponemos el puerto 3000
 EXPOSE 3000
+EXPOSE 5555
 
 # Define el comando que se ejecutará al iniciar el contenedor
-CMD ["node", "dist/index.js"]
+CMD ["npm", "run", "start:prod"]

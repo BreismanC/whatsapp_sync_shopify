@@ -21,18 +21,21 @@ import {
 
 import { ProductImage, ProductToShopify, Record } from "../interfaces";
 import { Server } from "socket.io";
+import { ProductService } from "./product.service";
 
 export class WhatsappService {
   private io: Server;
   private sock: any;
   private productComposition: Array<{ info: any; media: Buffer }> = [];
   private shopifyService: ShopifyService;
+  private productService: ProductService;
   private isAuthenticated: boolean = false;
   public qrCodeDataURL: string | undefined;
 
   constructor(io: Server) {
     this.io = io;
     this.shopifyService = new ShopifyService();
+    this.productService = new ProductService();
   }
 
   async connect() {
@@ -169,11 +172,26 @@ export class WhatsappService {
 
     const productData: ProductToShopify = { ...productInfo, images };
     const productCreated = await this.shopifyService.createProduct(productData);
+
     let record: Record = {};
     if (!productCreated) {
       record.error = true;
+      record.data = "Error al crear el producto en Shopify";
     } else {
-      record.data = JSON.stringify(productCreated);
+      try {
+        const productSaved = await this.productService.create({
+          shopifyId: productCreated.id.toString(),
+          name: productCreated.title,
+          sku: productInfo.sku,
+        });
+        console.log(`Producto guardado en la base de datos: ${productSaved}`);
+        record.data = JSON.stringify(productSaved);
+      } catch (error) {
+        if (error instanceof Error) {
+          record.error = true;
+          record.data = error.message;
+        }
+      }
     }
 
     generateRecord(record);
