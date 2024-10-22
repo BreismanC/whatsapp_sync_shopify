@@ -19,7 +19,7 @@ export class CronjobService {
    * Tarea que se ejecuta todos los días a las 2 de la mañana
    */
   run() {
-    cron.schedule("*/3 * * * *", async () => {
+    cron.schedule("0 2 * * *", async () => {
       console.log(
         `Ejecutando tarea programada a las ${new Date().toISOString()}`
       );

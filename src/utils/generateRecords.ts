@@ -13,7 +13,7 @@ export async function generateRecord(record: Record) {
 }
 
 function createRecordInFile({ timestamp, error, data }: Record) {
-  const pathFolder = `logs/logs.txt`;
+  const pathFolder = `persistent_volume/logs/logs.txt`;
 
   // Definir la estructura del log
   const logEntry = `[${timestamp}] - [error: ${error}] - [data: ${
@@ -22,7 +22,9 @@ function createRecordInFile({ timestamp, error, data }: Record) {
 
   try {
     if (!fs.existsSync(pathFolder)) {
-      fs.mkdirSync(pathFolder.split("/")[0], { recursive: true });
+      fs.mkdirSync(`${pathFolder.split("/")[0]}/${pathFolder.split("/")[1]}`, {
+        recursive: true,
+      });
       fs.writeFileSync(`${pathFolder}`, logEntry);
     } else {
       fs.appendFile(pathFolder, logEntry, (err) => {

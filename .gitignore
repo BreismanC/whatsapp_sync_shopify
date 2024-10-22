@@ -91,3 +91,5 @@ log/
 
 *.sqlite
 *.db
+
+persistent_volume/*

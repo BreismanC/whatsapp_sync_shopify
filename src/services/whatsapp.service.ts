@@ -39,7 +39,9 @@ export class WhatsappService {
   }
 
   async connect() {
-    const { state, saveCreds } = await useMultiFileAuthState("./auth");
+    const { state, saveCreds } = await useMultiFileAuthState(
+      "./persistent_volume/auth"
+    );
     this.sock = makeWASocket({
       auth: state,
       printQRInTerminal: false,

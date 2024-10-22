@@ -6,3 +6,4 @@ logs
 .vscode
 *.sqlite
 *.db
+persistent_volume/*

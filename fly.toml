@@ -21,6 +21,6 @@ primary_region = 'bog'
   cpu_kind = 'shared'
   cpus = 1
 
-[mounts]
-  source = "auth_volume"
-  destination = "/app/auth"
+[[mounts]]
+  source = "persistent_volume"   # Nombre del volumen en Fly.io
+  destination = "/app/persistent_volume" # Ruta dentro del contenedor donde se montará el volumen

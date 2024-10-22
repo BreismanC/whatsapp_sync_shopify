@@ -9,6 +9,4 @@ services:
     env_file:
       - .env
     volumes:
-      - ./database:/app/database       # Volumen para la base de datos SQLite
-      - ./logs:/app/logs               # Volumen para los logs
-      - ./auth:/app/auth               # Volumen para las sesiones de WhatsApp
+      - ./persistent_volume:/app/persistent_volume       # Volumen para la base de datos SQLite, auth y logs

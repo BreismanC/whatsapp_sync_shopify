@@ -7,8 +7,7 @@ export function isDifferenceThreeDays(startISO: string, endISO: string) {
   const diffInMs = end - start;
 
   // Convierte la diferencia a días
-  // const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-  const diffInDays = diffInMs / (1000 * 60);
+  const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
 
   // Retorna true si la diferencia es mayor 3 días
   return diffInDays > 3;

@@ -45,9 +45,7 @@ COPY --from=build /app/public ./public
 COPY --from=build /app/prisma ./prisma
 
 # Montamos volúmenes para la persistencia de la base de datos, logs y auth
-VOLUME /app/database       # Persistencia de la base de datos SQLite
-VOLUME /app/logs           # Persistencia de los logs
-VOLUME /app/auth           # Persistencia de la carpeta de sesión de WhatsApp
+VOLUME /app/persistent_volume
 
 #Exponemos el puerto 3000
 EXPOSE 3000
