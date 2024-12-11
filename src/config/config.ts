@@ -13,4 +13,6 @@ export const config: Config = {
   SHOPIFY_API_KEY: process.env.SHOPIFY_API_KEY as string,
   SHOPIFY_API_SECRET_KEY: process.env.SHOPIFY_API_SECRET_KEY as string,
   GROUP_ID: process.env.GROUP_ID as string,
+  LINE_1_TO_PRODUCT_CREATION: process.env.LINE_1_TO_PRODUCT_CREATION as string,
+  LINE_2_TO_PRODUCT_CREATION: process.env.LINE_2_TO_PRODUCT_CREATION as string,
 };

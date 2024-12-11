@@ -58,7 +58,7 @@ export class ShopifyService {
       return await this.shopify.product.update(shopifyId, { status });
     } catch (error) {
       throw new Error(
-        `Erro al intentar actualizar el producto en Shopify con Id: ${shopifyId}`
+        `Error al intentar actualizar el producto en Shopify con Id: ${shopifyId}`
       );
     }
   }

@@ -17,7 +17,7 @@ export async function extractProductInfo(
     const tagsMatch = msg.match(/CATEGORÍAS:\s*(.*)/i);
     const descriptionMatch = msg.match(/DESCRIPCIÓN:\s*(.*)/i);
     const additionalPricesMatch = [
-      ...msg.matchAll(/\* Precio \d+:\s*\$([\d,.]+) USD \(([^)]+)\)/g),
+      ...msg.matchAll(/Precio \d+:\s*\$([\d,.]+) USD \(([^)]+)\)/g),
     ];
     const groupMatch = msg.match(/GRUPO\s*(.*)\n(https?:\/\/[^\s]+)/i);
 

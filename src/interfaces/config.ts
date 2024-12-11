@@ -7,4 +7,6 @@ export interface Config {
   SHOPIFY_API_KEY: string;
   SHOPIFY_API_SECRET_KEY: string;
   GROUP_ID: string;
+  LINE_1_TO_PRODUCT_CREATION: string;
+  LINE_2_TO_PRODUCT_CREATION: string;
 }

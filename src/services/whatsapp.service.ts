@@ -31,11 +31,16 @@ export class WhatsappService {
   private productService: ProductService;
   private isAuthenticated: boolean = false;
   public qrCodeDataURL: string | undefined;
+  private productCreationLines: string[] = [];
 
   constructor(io: Server) {
     this.io = io;
     this.shopifyService = new ShopifyService();
     this.productService = new ProductService();
+    this.productCreationLines = [
+      config.LINE_1_TO_PRODUCT_CREATION,
+      config.LINE_2_TO_PRODUCT_CREATION,
+    ];
   }
 
   async connect() {
@@ -119,7 +124,16 @@ export class WhatsappService {
         continue;
       }
 
-      if (!msg.key.fromMe) {
+      const senderNumber = msg.key.participant
+        ?.split("@")[0]
+        .replace(/\D/g, "");
+
+      if (
+        !msg.key.fromMe ||
+        !this.productCreationLines.some(
+          (authorizedNumber) => senderNumber === authorizedNumber
+        )
+      ) {
         console.log("Mensaje no es de la persona de interés");
         continue;
       }
@@ -190,6 +204,9 @@ export class WhatsappService {
         record.data = JSON.stringify(productSaved);
       } catch (error) {
         if (error instanceof Error) {
+          console.log(
+            `Error al crear el producto [${productInfo.title}] en la base de datos`
+          );
           record.error = true;
           record.data = error.message;
         }

@@ -23,6 +23,12 @@ RUN npm run build
 # Usamos una imagen más ligera de Node.js para la etapa de producción
 FROM node:22.9.0-alpine3.19 AS production
 
+# Instalar tzdata para la zona horaria
+RUN apk add --no-cache tzdata
+
+# Configurar la zona horaria
+ENV TZ=America/Bogota
+
 # Establece el directorio de trabajo en el contenedor
 WORKDIR /app
 

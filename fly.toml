@@ -11,9 +11,9 @@ primary_region = 'bog'
 [http_service]
   internal_port = 3000
   force_https = true
-  auto_stop_machines = 'stop'
+  auto_stop_machines = false
   auto_start_machines = true
-  min_machines_running = 0
+  min_machines_running = 1
   processes = ['app']
 
 [[vm]]
@@ -24,3 +24,6 @@ primary_region = 'bog'
 [[mounts]]
   source = "persistent_volume"   # Nombre del volumen en Fly.io
   destination = "/app/persistent_volume" # Ruta dentro del contenedor donde se montará el volumen
+
+[env]
+TZ = "America/Bogota"
