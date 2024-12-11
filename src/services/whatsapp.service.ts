@@ -129,7 +129,6 @@ export class WhatsappService {
         .replace(/\D/g, "");
 
       if (
-        !msg.key.fromMe ||
         !this.productCreationLines.some(
           (authorizedNumber) => senderNumber === authorizedNumber
         )
